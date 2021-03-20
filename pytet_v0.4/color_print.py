@@ -18,3 +18,5 @@ print(TextColor().cyan   + '■', end='')
 print(TextColor().white  + '■', end='')
 print(TextColor().pink   + '■', end='')
 print()
+
+

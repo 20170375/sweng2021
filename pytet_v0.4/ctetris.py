@@ -19,7 +19,7 @@ class CTetris((Tetris)):
             self.justStarted = False
             print()
 
-            if self.tempBlk.anyGreaterThan(int(key)+1):
+            if self.tempBlk.anyGreaterThan(int(self.idxBlockType)+1):
                 self.state = TetrisState.Finished
             self.oScreen = Matrix(self.iScreen)
             self.oScreen.paste(self.tempBlk, self.top, self.left)
@@ -36,7 +36,7 @@ class CTetris((Tetris)):
             self.idxBlockDegree = (self.idxBlockDegree + 1) % Tetris.nBlockDegrees
             self.currBlk = Tetris.setOfBlockObjects[self.idxBlockType][self.idxBlockDegree]
         elif key == ' ': # drop the block
-            while not self.tempBlk.anyGreaterThan(1):
+            while not self.tempBlk.anyGreaterThan(int(self.idxBlockType)+1):
                     self.top += 1
                     self.tempBlk = self.iScreen.clip(self.top, self.left, self.top+self.currBlk.get_dy(), self.left+self.currBlk.get_dx())
                     self.tempBlk = self.tempBlk + self.currBlk
@@ -46,7 +46,7 @@ class CTetris((Tetris)):
         self.tempBlk = self.iScreen.clip(self.top, self.left, self.top+self.currBlk.get_dy(), self.left+self.currBlk.get_dx())
         self.tempBlk = self.tempBlk + self.currBlk
 
-        if self.tempBlk.anyGreaterThan(1):   ## 벽 충돌시 undo 수행
+        if self.tempBlk.anyGreaterThan(int(self.idxBlockType)+1):   ## 벽 충돌시 undo 수행
             if key == 'a': # undo: move right
                 self.left += 1
             elif key == 'd': # undo: move left
