@@ -29,7 +29,6 @@ class CTetris((Tetris)):
             self.justStarted = False
             print()
 
-#            if self.tempBlk.anyGreaterThan(self.idxBlockType+1):
             if self.overlapped(self.currBlk, self.tempBlk):
                 self.state = TetrisState.Finished
             self.oScreen = Matrix(self.iScreen)
@@ -48,7 +47,6 @@ class CTetris((Tetris)):
             self.currBlk = Tetris.setOfBlockObjects[self.idxBlockType][self.idxBlockDegree]
         elif key == ' ': # drop the block
             while not self.overlapped(self.currBlk, self.tempBlk):    
-#            while not self.tempBlk.anyGreaterThan(self.idxBlockType+1):
                     self.top += 1
                     self.tempBlk = self.iScreen.clip(self.top, self.left, self.top+self.currBlk.get_dy(), self.left+self.currBlk.get_dx())
                     self.tempBlk = self.tempBlk + self.currBlk
@@ -58,8 +56,7 @@ class CTetris((Tetris)):
         self.tempBlk = self.iScreen.clip(self.top, self.left, self.top+self.currBlk.get_dy(), self.left+self.currBlk.get_dx())
         self.tempBlk = self.tempBlk + self.currBlk
 
-        if self.overlapped(self.currBlk, self.tempBlk):
-#        if self.tempBlk.anyGreaterThan(self.idxBlockType+1):   ## 벽 충돌시 undo 수행
+        if self.overlapped(self.currBlk, self.tempBlk):   ## 벽 충돌시 undo 수행
             if key == 'a': # undo: move right
                 self.left += 1
             elif key == 'd': # undo: move left
