@@ -1,5 +1,6 @@
 from tetris import *
 from ctetris import *
+from color_print import TextColor
 from random import *
 
 import os
@@ -25,9 +26,21 @@ def printScreen(board):
 		line = ''
 		for x in range(CTetris.iScreenDw, board.oScreen.get_dx()-CTetris.iScreenDw):
 			if array[y][x] == 0:
-				line += '□'
+				line += TextColor().white + '□'
 			elif array[y][x] == 1:
-				line += '■'
+				line += TextColor().red + '■'
+			elif array[y][x] == 2:
+				line += TextColor().green + '■'
+			elif array[y][x] == 3:
+				line += TextColor().yellow + '■'
+			elif array[y][x] == 4:
+				line += TextColor().blue + '■'
+			elif array[y][x] == 5:
+				line += TextColor().purple + '■'
+			elif array[y][x] == 6:
+				line += TextColor().cyan + '■'
+			elif array[y][x] == 7:
+				line += TextColor().pink + '■'
 			else:
 				line += 'XX'
 		print(line)
