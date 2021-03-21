@@ -2,15 +2,15 @@ from tetris import *
 
 class CTetris((Tetris)):
 
-    def overlapped(self, shape, block):
-        isOverlapped = False
-        shape = shape.get_array()
-        block = block.get_array()
+    def overlapped(self):
+        shape = self.currBlk.get_array()
+        block = self.tempBlk.get_array()
+        
         for y in range(len(shape)):
             for x in range(len(shape[y])):
                 if shape[y][x] != 0 and block[y][x] != shape[y][x]:
-                    isOverlapped = True
-        return isOverlapped
+                    return True
+        return False
 
     def accept(self, key):
         self.state = TetrisState.Running
@@ -29,7 +29,7 @@ class CTetris((Tetris)):
             self.justStarted = False
             print()
 
-            if self.overlapped(self.currBlk, self.tempBlk):
+            if self.overlapped():
                 self.state = TetrisState.Finished
             self.oScreen = Matrix(self.iScreen)
             self.oScreen.paste(self.tempBlk, self.top, self.left)
@@ -46,7 +46,7 @@ class CTetris((Tetris)):
             self.idxBlockDegree = (self.idxBlockDegree + 1) % Tetris.nBlockDegrees
             self.currBlk = Tetris.setOfBlockObjects[self.idxBlockType][self.idxBlockDegree]
         elif key == ' ': # drop the block
-            while not self.overlapped(self.currBlk, self.tempBlk):    
+            while not self.overlapped():    
                     self.top += 1
                     self.tempBlk = self.iScreen.clip(self.top, self.left, self.top+self.currBlk.get_dy(), self.left+self.currBlk.get_dx())
                     self.tempBlk = self.tempBlk + self.currBlk
@@ -56,7 +56,7 @@ class CTetris((Tetris)):
         self.tempBlk = self.iScreen.clip(self.top, self.left, self.top+self.currBlk.get_dy(), self.left+self.currBlk.get_dx())
         self.tempBlk = self.tempBlk + self.currBlk
 
-        if self.overlapped(self.currBlk, self.tempBlk):   ## 벽 충돌시 undo 수행
+        if self.overlapped():   ## 벽 충돌시 undo 수행
             if key == 'a': # undo: move right
                 self.left += 1
             elif key == 'd': # undo: move left
@@ -82,16 +82,21 @@ class CTetris((Tetris)):
     def deleteFullLines(self):
         array = self.oScreen.get_array()
         
-        for y in range(self.oScreen.get_dy()-CTetris.iScreenDw-1, 1, -1):
+        for y in range(self.oScreen.get_dy()-CTetris.iScreenDw-1, 0, -1):
             isFull = True
-            for x in range(CTetris.iScreenDw, self.oScreen.get_dx()-CTetris.iScreenDw):
+            
+            for x in range(CTetris.iScreenDw, self.oScreen.get_dx()-CTetris.iScreenDw+1):
                 if array[y][x] == 0:
                     isFull = False
-                    continue
+                    break
+
             if isFull:
-                for line in range(y, 1, -1):
+                for line in range(y, 0, -1):
                     array[line] = array[line-1]
                     self.oScreen = Matrix(array)
+                array[0] = [0 for _ in array[0]]
+                self.deleteFullLines()
+                return
 
         return
 
