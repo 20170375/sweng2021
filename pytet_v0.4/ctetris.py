@@ -8,7 +8,7 @@ class CTetris((Tetris)):
         
         for y in range(len(shape)):
             for x in range(len(shape[y])):
-                if shape[y][x] != 0 and block[y][x] != shape[y][x]:
+                if shape[y][x] != 0 and shape[y][x] != block[y][x]:
                     return True
         return False
 
