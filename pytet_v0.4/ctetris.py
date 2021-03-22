@@ -83,14 +83,10 @@ class CTetris((Tetris)):
         array = self.oScreen.get_array()
         
         for y in range(self.oScreen.get_dy()-CTetris.iScreenDw-1, 0, -1):
-            isFull = True
-            
             for x in range(CTetris.iScreenDw, self.oScreen.get_dx()-CTetris.iScreenDw+1):
                 if array[y][x] == 0:
-                    isFull = False
                     break
-
-            if isFull:
+            else:
                 for line in range(y, 0, -1):
                     array[line] = array[line-1]
                     self.oScreen = Matrix(array)
