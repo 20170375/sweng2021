@@ -89,8 +89,9 @@ class CTetris((Tetris)):
             else:
                 for line in range(y, 0, -1):
                     array[line] = array[line-1]
-                    self.oScreen = Matrix(array)
-                array[0] = [0 for _ in array[0]]
+                for x in range(CTetris.iScreenDw, self.oScreen.get_dx()-CTetris.iScreenDw+1):
+                    array[0][x] = 0
+                self.oScreen = Matrix(array)
                 self.deleteFullLines()
                 return
 

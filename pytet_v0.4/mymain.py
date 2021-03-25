@@ -179,12 +179,12 @@ if __name__ == "__main__":
         
 		if key == 'q':
 			state = TetrisState.Finished
-			print('Game aborted...')
+			print(TextColor().white + 'Game aborted...')
 			break
 
 		state = processKey(board, key)
 		if state == TetrisState.Finished:
-			print('Game Over!!!')
+			print(TextColor().white + 'Game Over!!!')
 			break
     
 	unregisterAlarm()
