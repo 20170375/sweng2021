@@ -1,6 +1,5 @@
 from tetris import *
 from ctetris import *
-from color_print import TextColor
 from random import *
 
 import os
@@ -8,6 +7,16 @@ import sys
 import tty
 import termios
 import signal
+
+class TextColor():
+    red    = "\033[31m"
+    green  = "\033[32m"
+    yellow = "\033[33m"
+    blue   = "\033[34m"
+    purple = "\033[35m"
+    cyan   = "\033[36m"
+    white  = "\033[37m"
+    pink   = "\033[95m"
 
 def clearScreen(numlines=100):
 	if os.name == 'posix':
