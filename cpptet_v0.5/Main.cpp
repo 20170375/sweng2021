@@ -14,6 +14,8 @@
 #include <arpa/inet.h>
 #include <signal.h>
 
+#include <CTetris.h>
+
 using namespace std;
 
 
@@ -129,13 +131,23 @@ int *setOfCBlockArrays[] = {
   T6D0, T6D1, T6D2, T6D3,
 };
 
-#if 0
+string color_normal = "\033[37m";
+string color_black = color_normal;
+string color_green = "\033[32m";
+string color_cyan = "\033[36m";
+string color_blue = "\033[32m";
+string color_yellow = "\033[33m";
+string color_red = "\033[31m";
+string color_magenta = color_red;
+string b_color_black = color_normal;
+
+#if 1
 void drawScreen(CTetris *board)
 {
   int dy = board->oScreen->get_dy();
   int dx = board->oScreen->get_dx();
   int dw = board->iScreenDw;
-  int **array = board->oScreen->get_array();
+  int **array = board->oCScreen->get_array();
   system("clear");
 
   for (int y = 0; y < dy - dw + 1; y++) {
@@ -181,7 +193,7 @@ int main(int argc, char *argv[]) {
     exit(1);
   }
 
-#if 0
+#if 1
   CTetris::init(setOfCBlockArrays, MAX_BLK_TYPES, MAX_BLK_DEGREES);
   CTetris *board = new CTetris(dy, dx);
   TetrisState state;
@@ -192,15 +204,15 @@ int main(int argc, char *argv[]) {
 
   registerAlarm();
   while (key != 'q') {
-#if 0
+#if 1
     state = board->accept(key);
     if (state == NewBlock) {
       key = (char)('0' + rand() % MAX_BLK_TYPES);
       state = board->accept(key);
       if (state == Finished) {
-	drawScreen(board);
-	cout << endl;
-	break;
+	      drawScreen(board);
+	      cout << endl;
+	      break;
       }
     }
     drawScreen(board);
@@ -209,7 +221,7 @@ int main(int argc, char *argv[]) {
     key = getch();
     cout << key << endl;
   }
-#if 0
+#if 1
   delete board;
 #endif
 

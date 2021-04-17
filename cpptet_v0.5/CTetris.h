@@ -2,15 +2,15 @@
 #include "Tetris.h"
 
 class CTetris : public Tetris {
-    private:
-        static Matrix **setOfCBlockObjects;
-        Matrix currCBlk;
-        Matrix iCscreen;
-        Matrix oCscreen;
     public:
+        static Matrix **setOfCBlockObjects;
+        Matrix *currCBlk;
+        Matrix *iCScreen;
+        Matrix *oCScreen;
+
         CTetris(int dy, int dx);
         ~CTetris();
-        void CTetris::init(int **setOfBlockArrays, int blockTypes, int blockDegrees);
-        int CTetris::accept(char key);
-        void CTetris::deleteFullLines();
+        static void init(int *setOfBlockArrays[], int nTypes, int nDegrees);
+        int accept(char key);
+        void deleteFullLines();
 };
