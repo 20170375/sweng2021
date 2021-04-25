@@ -54,11 +54,11 @@ int CTetris::accept(char key) {
     state = Tetris::accept(key);
 
     *currCBlk = setOfCBlockObjects[idxBlockType][idxBlockDegree];
-    tempBlk = iCScreen->clip(top, left, top+currCBlk->get_dy(), left+currCBlk->get_dx());
-    tempBlk = tempBlk->add(currCBlk);
+    Matrix* tempCBlk = iCScreen->clip(top, left, top+currCBlk->get_dy(), left+currCBlk->get_dx());
+    tempCBlk = tempCBlk->add(currCBlk);
 
     *oCScreen = Matrix(iCScreen);
-    oCScreen->paste(tempBlk, top, left);
+    oCScreen->paste(tempCBlk, top, left);
     return state;
 }
 

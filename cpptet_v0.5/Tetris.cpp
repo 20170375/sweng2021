@@ -6,10 +6,6 @@ int Tetris::nBlockDegrees;
 int Tetris::iScreenDw;
 Matrix **Tetris::setOfBlockObjects;
 
-Tetris::Tetris() {
-    
-}
-
 Tetris::Tetris(int dy, int dx) {
     iScreenDy = dy;
     iScreenDx = dx;
@@ -32,9 +28,9 @@ Tetris::~Tetris() {
     delete oScreen;
 }
 
-void Tetris::init(int *setOfBlockArrays[], int nTypes, int nDegrees) {
-    nBlockTypes = nTypes;
-    nBlockDegrees = nDegrees;
+void Tetris::init(int *setOfBlockArrays[], int nBlockTypes_, int nBlockDegrees_) {
+    nBlockTypes = nBlockTypes_;
+    nBlockDegrees = nBlockDegrees_;
     setOfBlockObjects = new Matrix*[nBlockTypes];
     for(int y=0; y<nBlockTypes; y++)
         setOfBlockObjects[y] = new Matrix[nBlockDegrees];
@@ -132,28 +128,31 @@ int Tetris::accept(char key) {
         }
     }
     else{
-        // cout << "Wrong key!!!";
+        cout << "Wrong key!!!" << endl;
     }
 
     tempBlk = iScreen->clip(top, left, top+currBlk->get_dy(), left+currBlk->get_dx());
     tempBlk = tempBlk->add(currBlk);
 
-    if(tempBlk->anyGreaterThan(1)){   // 벽 충돌시 undo 수행
-        if(key == 'a'){ // undo: move right
+    if(tempBlk->anyGreaterThan(1)) {   // 벽 충돌시 undo 수행
+        if(key == 'a') { // undo: move right
             left += 1;
         }
-        else if(key == 'd'){ // undo: move left
+        else if(key == 'd') { // undo: move left
             left -= 1;
         }
-        else if(key == 's'){ // undo: move up
+        else if(key == 's') { // undo: move up
             top -= 1;
             state = NewBlock;
         }
-        else if(key == 'w'){ // undo: rotate the block counter-clockwise
-            idxBlockDegree = (idxBlockDegree - 1) % nBlockDegrees;
+        else if(key == 'w') { // undo: rotate the block counter-clockwise
+            if(idxBlockDegree > 1)
+                idxBlockDegree = (idxBlockDegree - 1) % nBlockDegrees;
+            else
+                idxBlockDegree = (idxBlockDegree + nBlockDegrees - 1) % nBlockDegrees;
             *currBlk = setOfBlockObjects[idxBlockType][idxBlockDegree];
         }
-        else if(key == ' '){ // undo: move up
+        else if(key == ' ') { // undo: move up
             top -= 1;
             state = NewBlock;
         }

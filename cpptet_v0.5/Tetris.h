@@ -25,7 +25,6 @@ class Tetris {
         Matrix *iScreen;
         Matrix *oScreen;
 
-        Tetris();
         Tetris(int dy, int dx);
         ~Tetris();
         static void init(int *setOfBlockArrays[], int nTypes, int nDegrees);

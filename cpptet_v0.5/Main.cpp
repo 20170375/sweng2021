@@ -132,14 +132,14 @@ int *setOfCBlockArrays[] = {
 };
 
 string color_normal = "\033[37m";
-string color_black = color_normal;
-string color_green = "\033[32m";
-string color_cyan = "\033[36m";
-string color_blue = "\033[32m";
+string color_red    = "\033[31m";
+string color_green  = "\033[32m";
 string color_yellow = "\033[33m";
-string color_red = "\033[31m";
-string color_magenta = color_red;
-string b_color_black = color_normal;
+string color_blue   = "\033[34m";
+string color_purple = "\033[35m";
+string color_cyan   = "\033[36m";
+string color_white  = "\033[37m";
+string color_pink   = "\033[95m";
 
 #if 1
 void drawScreen(CTetris *board)
@@ -152,24 +152,42 @@ void drawScreen(CTetris *board)
 
   for (int y = 0; y < dy - dw + 1; y++) {
     for (int x = dw - 1; x < dx - dw + 1; x++) {
+      // if (array[y][x] == 0)
+	    //   cout << color_black << "□ " << color_normal;
+      // else if (array[y][x] == 1)
+	    //   cout << color_black << "■ " << color_normal;
+      // else if (array[y][x] == 2)
+	    //   cout << color_green << "■ " << color_normal;
+      // else if (array[y][x] == 3)
+	    //   cout << color_cyan << "■ " << color_normal;
+      // else if (array[y][x] == 4)
+	    //   cout << color_blue << "■ " << color_normal;
+      // else if (array[y][x] == 5)
+	    //   cout << color_yellow << "■ " << color_normal;
+      // else if (array[y][x] == 6)
+	    //   cout << color_red << "■ " << color_normal;
+      // else if (array[y][x] == 7)
+	    //   cout << color_magenta << "■ " << color_normal;
+      // else // array[y][x] == 1 // wall
+	    //   cout << b_color_black << "■ " << color_normal;
       if (array[y][x] == 0)
-	cout << color_black << "□ " << color_normal;
-      else if (array[y][x] == 1)
-	cout << color_black << "■ " << color_normal;
+	      cout << color_white << "□ " << color_normal;
+      else if (array[y][x] == 1 && x>dw-1 && x<dx-dw && y<dy-dw)
+	      cout << color_blue << "■ " << color_normal;
       else if (array[y][x] == 2)
-	cout << color_green << "■ " << color_normal;
+	      cout << color_cyan << "■ " << color_normal;
       else if (array[y][x] == 3)
-	cout << color_cyan << "■ " << color_normal;
+	      cout << color_green << "■ " << color_normal;
       else if (array[y][x] == 4)
-	cout << color_blue << "■ " << color_normal;
+	      cout << color_yellow << "■ " << color_normal;
       else if (array[y][x] == 5)
-	cout << color_yellow << "■ " << color_normal;
+	      cout << color_pink << "■ " << color_normal;
       else if (array[y][x] == 6)
-	cout << color_red << "■ " << color_normal;
+	      cout << color_purple << "■ " << color_normal;
       else if (array[y][x] == 7)
-	cout << color_magenta << "■ " << color_normal;
+	      cout << color_red << "■ " << color_normal;
       else // array[y][x] == 1 // wall
-	cout << b_color_black << "■ " << color_normal;
+	      cout << color_white << "■ " << color_normal;
     }
     cout << endl;
   }
