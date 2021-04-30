@@ -9,17 +9,15 @@ Matrix **Tetris::setOfBlockObjects;
 Tetris::Tetris(int dy, int dx) {
     iScreenDy = dy;
     iScreenDx = dx;
-    arrayScreen = createArrayScreen();
+    int *tArrayScreen = createArrayScreen();
     currBlk = new Matrix();
     tempBlk = new Matrix();
-    iScreen = new Matrix(arrayScreen, arrayScreenDy, arrayScreenDx);
+    iScreen = new Matrix(tArrayScreen, arrayScreenDy, arrayScreenDx);
     oScreen = new Matrix(iScreen);
     justStarted = true;
 }
 
 Tetris::~Tetris() {
-    // for(int y=0; y<nBlockTypes; y++)
-    //     delete setOfBlockObjects[y];
     delete setOfBlockObjects;
     delete arrayScreen;
     delete currBlk;
@@ -28,9 +26,9 @@ Tetris::~Tetris() {
     delete oScreen;
 }
 
-void Tetris::init(int *setOfBlockArrays[], int nBlockTypes_, int nBlockDegrees_) {
-    nBlockTypes = nBlockTypes_;
-    nBlockDegrees = nBlockDegrees_;
+void Tetris::init(int *setOfBlockArrays[], int nTypes, int nDegrees) {
+    nBlockTypes = nTypes;
+    nBlockDegrees = nDegrees;
     setOfBlockObjects = new Matrix*[nBlockTypes];
     for(int y=0; y<nBlockTypes; y++)
         setOfBlockObjects[y] = new Matrix[nBlockDegrees];

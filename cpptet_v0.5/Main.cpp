@@ -171,23 +171,23 @@ void drawScreen(CTetris *board)
       // else // array[y][x] == 1 // wall
 	    //   cout << b_color_black << "■ " << color_normal;
       if (array[y][x] == 0)
-	      cout << color_white << "□ " << color_normal;
+	      cout << color_white << "□" << color_normal;
       else if (array[y][x] == 1 && x>dw-1 && x<dx-dw && y<dy-dw)
-	      cout << color_blue << "■ " << color_normal;
+	      cout << color_blue << "■" << color_normal;
       else if (array[y][x] == 2)
-	      cout << color_cyan << "■ " << color_normal;
+	      cout << color_cyan << "■" << color_normal;
       else if (array[y][x] == 3)
-	      cout << color_green << "■ " << color_normal;
+	      cout << color_green << "■" << color_normal;
       else if (array[y][x] == 4)
-	      cout << color_yellow << "■ " << color_normal;
+	      cout << color_yellow << "■" << color_normal;
       else if (array[y][x] == 5)
-	      cout << color_pink << "■ " << color_normal;
+	      cout << color_pink << "■" << color_normal;
       else if (array[y][x] == 6)
-	      cout << color_purple << "■ " << color_normal;
+	      cout << color_purple << "■" << color_normal;
       else if (array[y][x] == 7)
-	      cout << color_red << "■ " << color_normal;
+	      cout << color_red << "■" << color_normal;
       else // array[y][x] == 1 // wall
-	      cout << color_white << "■ " << color_normal;
+	      cout << color_white << "■" << color_normal;
     }
     cout << endl;
   }
