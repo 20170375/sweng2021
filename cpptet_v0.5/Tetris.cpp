@@ -9,16 +9,17 @@ Matrix **Tetris::setOfBlockObjects;
 Tetris::Tetris(int dy, int dx) {
     iScreenDy = dy;
     iScreenDx = dx;
-    int *tArrayScreen = createArrayScreen();
     currBlk = new Matrix();
     tempBlk = new Matrix();
-    iScreen = new Matrix(tArrayScreen, arrayScreenDy, arrayScreenDx);
+    iScreen = new Matrix(createArrayScreen(), arrayScreenDy, arrayScreenDx);
     oScreen = new Matrix(iScreen);
     justStarted = true;
 }
 
 Tetris::~Tetris() {
-    delete setOfBlockObjects;
+    for(int i=0; i<nBlockTypes; i++)
+        delete [] setOfBlockObjects[i];
+    delete [] setOfBlockObjects;
     delete arrayScreen;
     delete currBlk;
     delete tempBlk;
@@ -33,7 +34,7 @@ void Tetris::init(int *setOfBlockArrays[], int nTypes, int nDegrees) {
     for(int y=0; y<nBlockTypes; y++)
         setOfBlockObjects[y] = new Matrix[nBlockDegrees];
 
-    int arrayBlk_maxSize = 0;
+    int maxSize = 0;
     int size[nBlockTypes];
     for(int i=0; i<nBlockTypes; i++)
         size[i] = 0;
@@ -42,25 +43,22 @@ void Tetris::init(int *setOfBlockArrays[], int nTypes, int nDegrees) {
         for(int j=0; setOfBlockArrays[i * nBlockDegrees][j]!=-1; j++)
             size[i]++;
         size[i] = (int)sqrt(size[i]);
+        if(maxSize <= size[i])
+            maxSize = size[i];
     }
-
-    for(int i=0; i<nBlockTypes; i++) {
-        if(arrayBlk_maxSize <= size[i])
-            arrayBlk_maxSize = size[i];
-    }
-    iScreenDw = arrayBlk_maxSize;     // larget enough to cover the largest block
 
     for(int i=0; i<nBlockTypes; i++) {
         for(int j=0; j<nBlockDegrees; j++)
             setOfBlockObjects[i][j] = Matrix(setOfBlockArrays[i * nBlockDegrees + j], size[i], size[i]);
     }
+    iScreenDw = maxSize;     // large enough to cover the largest block
 }
 
 int *Tetris::createArrayScreen() {
-    arrayScreenDx = iScreenDw * 2 + iScreenDx;
     arrayScreenDy = iScreenDy + iScreenDw;
+    arrayScreenDx = iScreenDx + iScreenDw * 2;
 
-    arrayScreen = new int[arrayScreenDy * arrayScreenDx + 1];
+    arrayScreen = new int[arrayScreenDy * arrayScreenDx];
     for(int y=0; y<iScreenDy; y++) {
         for(int x=0; x<iScreenDw; x++)
             arrayScreen[y * arrayScreenDx + x] = 1;
@@ -74,14 +72,13 @@ int *Tetris::createArrayScreen() {
         for(int x=0; x<arrayScreenDx; x++)
             arrayScreen[(iScreenDy + y) * arrayScreenDx + x] = 1;
 
-    arrayScreen[arrayScreenDy * arrayScreenDx] = -1;
     return arrayScreen;
 }
 
 TetrisState Tetris::accept(char key) {
     state = Running;
 
-    if(key>='0' && key<='6') {
+    if(key>='0' && key<=('0' + nBlockTypes - 1)) {
         if(justStarted == false)
             deleteFullLines();
         *iScreen = Matrix(oScreen);
@@ -101,18 +98,10 @@ TetrisState Tetris::accept(char key) {
         oScreen->paste(tempBlk, top, left);
         return state;
     }
-    else if(key == 'q') {
-        
-    }
-    else if(key == 'a') { // move left
-        left -= 1;
-    }
-    else if(key == 'd') { // move right
-        left += 1;
-    }
-    else if(key == 's') { // move down
-        top += 1;
-    }
+    else if(key == 'q') { }
+    else if(key == 'a') { left -= 1; }
+    else if(key == 'd') { left += 1; }
+    else if(key == 's') { top += 1; }
     else if(key == 'w') { // rotate the block clockwise
         idxBlockDegree = (idxBlockDegree + 1) % nBlockDegrees;
         *currBlk = setOfBlockObjects[idxBlockType][idxBlockDegree];
@@ -124,20 +113,14 @@ TetrisState Tetris::accept(char key) {
             tempBlk = tempBlk->add(currBlk);
         }
     }
-    else{
-        cout << "Wrong key!!!" << endl;
-    }
+    else{ cout << "Wrong key!!!" << endl; }
 
     tempBlk = iScreen->clip(top, left, top+currBlk->get_dy(), left+currBlk->get_dx());
     tempBlk = tempBlk->add(currBlk);
 
     if(tempBlk->anyGreaterThan(1)) {   // 벽 충돌시 undo 수행
-        if(key == 'a') { // undo: move right
-            left += 1;
-        }
-        else if(key == 'd') { // undo: move left
-            left -= 1;
-        }
+        if(key == 'a') { left += 1; } // undo: move right
+        else if(key == 'd') { left -= 1; } // undo: move left
         else if(key == 's') { // undo: move up
             top -= 1;
             state = NewBlock;

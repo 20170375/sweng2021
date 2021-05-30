@@ -29,21 +29,22 @@ void CTetris::init(int *setOfBlockArrays[], int nTypes, int nDegrees) {
 }
 
 CTetris::CTetris(int dy, int dx) : Tetris(dy, dx){
-    int *tArrayScreen = createArrayScreen();
     currCBlk = new Matrix();
-    iCScreen = new Matrix(tArrayScreen, arrayScreenDy, arrayScreenDx);
+    iCScreen = new Matrix(createArrayScreen(), arrayScreenDy, arrayScreenDx);
     oCScreen = new Matrix(iCScreen);
 }
 
 CTetris::~CTetris() {
-    delete setOfCBlockObjects;
+    for(int i=0; i<nBlockTypes; i++)
+        delete [] setOfCBlockObjects[i];
+    delete [] setOfCBlockObjects;
     delete currCBlk;
     delete iCScreen;
     delete oCScreen;
 }
 
 TetrisState CTetris::accept(char key) {
-    if(key>='0' && key<='6'){
+    if(key>='0' && key<=('0' + nBlockTypes - 1)){
         if(justStarted == false)
             deleteFullLines();
         *iCScreen = Matrix(oCScreen);
