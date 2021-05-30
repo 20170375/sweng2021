@@ -42,7 +42,7 @@ CTetris::~CTetris() {
     delete oCScreen;
 }
 
-int CTetris::accept(char key) {
+TetrisState CTetris::accept(char key) {
     if(key>='0' && key<='6'){
         if(justStarted == false)
             deleteFullLines();

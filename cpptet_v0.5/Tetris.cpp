@@ -42,7 +42,6 @@ void Tetris::init(int *setOfBlockArrays[], int nTypes, int nDegrees) {
         for(int j=0; setOfBlockArrays[i * nBlockDegrees][j]!=-1; j++)
             size[i]++;
         size[i] = (int)sqrt(size[i]);
-        
     }
 
     for(int i=0; i<nBlockTypes; i++) {
@@ -79,7 +78,7 @@ int *Tetris::createArrayScreen() {
     return arrayScreen;
 }
 
-int Tetris::accept(char key) {
+TetrisState Tetris::accept(char key) {
     state = Running;
 
     if(key>='0' && key<='6') {

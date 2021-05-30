@@ -11,6 +11,6 @@ class CTetris : public Tetris {
         CTetris(int dy, int dx);
         ~CTetris();
         static void init(int *setOfBlockArrays[], int nTypes, int nDegrees);
-        int accept(char key);
+        TetrisState accept(char key);
         void deleteFullLines();
 };

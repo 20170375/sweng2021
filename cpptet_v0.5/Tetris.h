@@ -18,7 +18,7 @@ class Tetris {
         int arrayScreenDy;
         int top;
         int left;
-        int state;
+        TetrisState state;
         int *arrayScreen;
         Matrix *currBlk;
         Matrix *tempBlk;
@@ -29,6 +29,6 @@ class Tetris {
         ~Tetris();
         static void init(int *setOfBlockArrays[], int nTypes, int nDegrees);
         int *createArrayScreen();
-        int accept(char key);
+        TetrisState accept(char key);
         void deleteFullLines();
 };
