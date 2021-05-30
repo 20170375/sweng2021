@@ -1,4 +1,5 @@
 from matrix import *
+from game import *
 from enum import Enum
 
 class TetrisState(Enum):
@@ -7,7 +8,7 @@ class TetrisState(Enum):
     Finished = 2
 ### end of class TetrisState():
 
-class Tetris():
+class Tetris(Game):
     nBlockTypes = 0
     nBlockDegrees = 0
     setOfBlockObjects = 0
@@ -64,11 +65,11 @@ class Tetris():
             if self.justStarted == False:
                 self.deleteFullLines()
             self.iScreen = Matrix(self.oScreen)
-            self.top = 0
-            self.left = Tetris.iScreenDw + self.iScreenDx//2 - 2
             self.idxBlockType = int(key)
             self.idxBlockDegree = 0
             self.currBlk = Tetris.setOfBlockObjects[self.idxBlockType][self.idxBlockDegree]
+            self.top = 0
+            self.left = Tetris.iScreenDw + self.iScreenDx//2 - self.currBlk.get_dx()//2
             self.tempBlk = self.iScreen.clip(self.top, self.left, self.top+self.currBlk.get_dy(), self.left+self.currBlk.get_dx())
             self.tempBlk = self.tempBlk + self.currBlk
             self.justStarted = False
@@ -88,7 +89,7 @@ class Tetris():
         elif key == 's': # move down
             self.top += 1
         elif key == 'w': # rotate the block clockwise
-            self.idxBlockDegree = (self.idxBlockDegree + 1) % 4
+            self.idxBlockDegree = (self.idxBlockDegree + 1) % Tetris.nBlockDegrees
             self.currBlk = Tetris.setOfBlockObjects[self.idxBlockType][self.idxBlockDegree]
         elif key == ' ': # drop the block
             while not self.tempBlk.anyGreaterThan(1):
@@ -110,7 +111,7 @@ class Tetris():
                 self.top -= 1
                 self.state = TetrisState.NewBlock
             elif key == 'w': # undo: rotate the block counter-clockwise
-                self.idxBlockDegree = (self.idxBlockDegree - 1) % 4
+                self.idxBlockDegree = (self.idxBlockDegree - 1) % Tetris.nBlockDegrees
                 self.currBlk = Tetris.setOfBlockObjects[self.idxBlockType][self.idxBlockDegree]
             elif key == ' ': # undo: move up
                 self.top -= 1
@@ -124,35 +125,27 @@ class Tetris():
 
         return self.state
 
-    def printScreen(self):
-        array = self.oScreen.get_array()
-
-        for y in range(self.oScreen.get_dy()-Tetris.iScreenDw):
-            for x in range(Tetris.iScreenDw, self.oScreen.get_dx()-Tetris.iScreenDw):
-                if array[y][x] == 0:
-                    print("□", end='')
-                elif array[y][x] == 1:
-                    print("■", end='')
-                else:
-                    print("XX", end='')
-            print()
-
+    def getScreen(self):
+        return self.oScreen
 
     def deleteFullLines(self):
-        array = self.oScreen.get_array()
-        
-        for y in range(self.oScreen.get_dy()-Tetris.iScreenDw-1, 1, -1):
-            isFull = True
-            for x in range(Tetris.iScreenDw, self.oScreen.get_dx()-Tetris.iScreenDw):
-                if array[y][x] == 0:
-                    isFull = False
-                    continue
-            if isFull:
-                for line in range(y, 1, -1):
-                    array[line] = array[line-1]
-                    self.oScreen = Matrix(array)
+        nDeleted = 0
+        nScanned = self.currBlk.get_dy()
 
-        return
+        if self.top + self.currBlk.get_dy() - 1 >= self.iScreenDy:
+            nScanned -= (self.top + self.currBlk.get_dy() - self.iScreenDy)
+
+        zero = Matrix([[ 0 for x in range(0, (self.iScreenDx - 2*Tetris.iScreenDw))]])
+        for y in range(nScanned - 1, -1, -1):
+            cy = self.top + y + nDeleted
+            line = self.oScreen.clip(cy, 0, cy+1, self.oScreen.get_dx())
+            if line.sum() == self.oScreen.get_dx():
+                temp = self.oScreen.clip(0, 0, cy, self.oScreen.get_dx())
+                self.oScreen.paste(temp, 1, 0)
+                self.oScreen.paste(zero, 0, Tetris.iScreenDw)
+                nDeleted += 1
+
+        return nScanned
 
 ### end of class Tetris():
     

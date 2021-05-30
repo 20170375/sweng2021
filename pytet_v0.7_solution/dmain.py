@@ -1,4 +1,5 @@
 from tetris import *
+from decorator import *
 from random import *
 
 import os
@@ -6,6 +7,17 @@ import sys
 import tty
 import termios
 import signal
+
+class TextColor():
+    red    = "\033[31m"
+    green  = "\033[32m"
+    yellow = "\033[33m"
+    blue   = "\033[34m"
+    purple = "\033[35m"
+    cyan   = "\033[36m"
+    white  = "\033[37m"
+    pink   = "\033[95m"
+### end of class TextColor():
 
 def clearScreen(numlines=100):
 	if os.name == 'posix':
@@ -16,17 +28,47 @@ def clearScreen(numlines=100):
 		print('\n' * numlines)
 	return
 
-def printScreen(board):
+def _printScreen(screen):
 	clearScreen()
-	array = board.oScreen.get_array()
+	array = screen.get_array()
 
-	for y in range(board.oScreen.get_dy()-Tetris.iScreenDw):
+	for y in range(screen.get_dy()-Tetris.iScreenDw):
 		line = ''
-		for x in range(Tetris.iScreenDw, board.oScreen.get_dx()-Tetris.iScreenDw):
+		for x in range(Tetris.iScreenDw, screen.get_dx()-Tetris.iScreenDw):
 			if array[y][x] == 0:
 				line += '□'
 			elif array[y][x] == 1:
 				line += '■'
+			else:
+				line += 'XX'
+		print(line)
+
+	print()
+	return
+
+def printScreen(screen):
+	clearScreen()
+	array = screen.get_array()
+
+	for y in range(screen.get_dy()-Tetris.iScreenDw):
+		line = ''
+		for x in range(Tetris.iScreenDw, screen.get_dx()-Tetris.iScreenDw):
+			if array[y][x] == 0:
+				line += TextColor().white+'□'
+			elif array[y][x] == 1:
+				line += TextColor().red+'■'
+			elif array[y][x] == 2:
+				line += TextColor().green+'■'
+			elif array[y][x] == 3:
+				line += TextColor().yellow+'■'
+			elif array[y][x] == 4:
+				line += TextColor().blue+'■'
+			elif array[y][x] == 5:
+				line += TextColor().purple +'■'
+			elif array[y][x] == 6:
+				line += TextColor().cyan+'■'
+			elif array[y][x] == 7:
+				line += TextColor().pink+'■'
 			else:
 				line += 'XX'
 		print(line)
@@ -55,6 +97,7 @@ def getChar():
 	try:
 		tty.setraw(sys.stdin.fileno())
 		ch = sys.stdin.read(1)
+		unregisterAlarm()
 	finally:
 		termios.tcsetattr(fd, termios.TCSADRAIN, old_settings)
 	return ch
@@ -73,6 +116,7 @@ def readKeyWithTimeOut():
 	registerAlarm(timeout_handler, 1)
 	try:
 		key = readKey()
+		unregisterAlarm()
 		return key
 	except RuntimeError as e:
 		pass # print('readkey() interrupted!')
@@ -131,15 +175,17 @@ def processKey(board, key):
 	global nBlocks 
 
 	state = board.accept(key)
-	printScreen(board)
+	screen = board.getScreen()
+	printScreen(screen)
           
 	if state != TetrisState.NewBlock:
 		return state
 
 	idxBlockType = randint(0, nBlocks-1)
-	key = '0' + str(idxBlockType)
+	key = str(idxBlockType)
 	state = board.accept(key)
-	printScreen(board)
+	screen = board.getScreen()
+	printScreen(screen)
 
 	if state != TetrisState.Finished:
 		return state
@@ -147,15 +193,17 @@ def processKey(board, key):
 	return state
 
 if __name__ == "__main__":
+
 	setOfBlockArrays = initSetOfBlockArrays()
 
 	Tetris.init(setOfBlockArrays)
-	board = Tetris(20, 15)
+	board = ColorDecorator(Tetris(20, 15)) ### decorator pattern applied!!
 
 	idxBlockType = randint(0, nBlocks-1)
 	key = '0' + str(idxBlockType)
 	state = board.accept(key)
-	printScreen(board)
+	screen = board.getScreen()
+	printScreen(screen)
 
 	while True:
 		key = readKeyWithTimeOut()
@@ -177,5 +225,4 @@ if __name__ == "__main__":
 	print('Program terminated...')
 
 ### end of main.py
-
 
