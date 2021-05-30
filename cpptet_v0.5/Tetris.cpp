@@ -20,7 +20,7 @@ Tetris::~Tetris() {
     for(int i=0; i<nBlockTypes; i++)
         delete [] setOfBlockObjects[i];
     delete [] setOfBlockObjects;
-    delete arrayScreen;
+    delete [] arrayScreen;
     delete currBlk;
     delete tempBlk;
     delete iScreen;
